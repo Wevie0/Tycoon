@@ -39,7 +39,7 @@ class Deck {
     }
 }
 
-class Hand {
+class Player {
 
 }
 
