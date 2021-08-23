@@ -22,8 +22,8 @@ class Deck {
                 this.Deck.push(new Card(suit, values[v], faces[v]));
             }
         }
-        this.Deck.push(new Card('Joker', 0, 'Joker'))
-        this.Deck.push(new Card('Joker', 0, 'Joker'))
+        this.Deck.push(new Card('_Joker', 14, 'Joker'))
+        this.Deck.push(new Card('_Joker', 14, 'Joker'))
     }
 
     shuffle() {
@@ -44,6 +44,8 @@ class Player {
     constructor(name) {
         this.name = name;
         this.cards = [];
+        this.score = 0;
+        this.role = "Poor";
     }
 }
 
@@ -61,16 +63,30 @@ class Board {
         let deck = new Deck();
         deck.create();
         deck.shuffle();
+
         this.players[0].cards = deck.Deck.slice(0, 13);
         this.players[1].cards = deck.Deck.slice(13, 26);
         this.players[2].cards = deck.Deck.slice(26, 40);
         this.players[3].cards = deck.Deck.slice(40, 54);
 
+        this.sort(this.players[0].cards);
+        this.sort(this.players[1].cards);
+        this.sort(this.players[2].cards);
+        this.sort(this.players[3].cards);
+
 
     }
 
     sort(hand) {
-
+        hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
+        // hand.sort((a, b) => {
+        //     if (a.suit === b.suit) {
+        //         return a.value > b.value ? 1 : -1;
+        //     }
+        //     else {
+        //         return a.suit < b.suit ? 1 : -1;
+        //     }
+        // })
     }
 }
 
