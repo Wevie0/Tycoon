@@ -45,75 +45,72 @@ class Deck {
 class Player {
     constructor(name) {
         this.name = name;
+        this.id = -1;
         this.cards = [];
-        this.score = 0;
         this.role = "Poor";
+        this.score = 0;
+
     }
 }
 
-class Board {
-    constructor() {
-        this.players = [];
+function give_hand(player) {
+    let unsorted = [];
+    if (player.id === 0) {
+        unsorted = deck.Deck.slice(0, 13);
     }
-
-    start(p0, p1, p2, p3) {
-        this.players.push(new Player(p0));
-        this.players.push(new Player(p1));
-        this.players.push(new Player(p2));
-        this.players.push(new Player(p3));
-
-        let deck = new Deck();
-        deck.create();
-        deck.shuffle();
-
-        this.players[0].cards = deck.Deck.slice(0, 13);
-        this.players[1].cards = deck.Deck.slice(13, 26);
-        this.players[2].cards = deck.Deck.slice(26, 40);
-        this.players[3].cards = deck.Deck.slice(40, 54);
-
-        this.sort_hand(this.players[0].cards);
-        this.sort_hand(this.players[1].cards);
-        this.sort_hand(this.players[2].cards);
-        this.sort_hand(this.players[3].cards);
+    else if (player.id === 1) {
+        unsorted = deck.Deck.slice(13, 26);
     }
-
-    sort_hand(hand) {
-        hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
-
-        /* Sorts suits and values (not needed)
-        hand.sort((a, b) => {
-            if (a.suit === b.suit) {
-                return a.value > b.value ? 1 : -1;
-            }
-            else {
-                return a.suit < b.suit ? 1 : -1;
-            }
-        })
-        */
+    else if (player.id === 2) {
+        unsorted = deck.Deck.slice(26, 40);
     }
-
-    show_cards(player) {
-        let p = parseInt(player.slice(1));
-        for (let i = 0; i < this.players[p].cards.length; i++) {
-            let card = this.players[p].cards[i];
-            let img = document.createElement("img");
-            let address = "./cards/" + card.suit.toLowerCase().slice(0, 1) + "_" + card.value + ".png";
-            img.src = address;
-            img.width = 75;
-            img.height = 120;
-            document.querySelector("#player-cards").appendChild(img);
-        }
+    else if (player.id === 3) {
+        unsorted = deck.Deck.slice(40, 54);
     }
+    player.cards = sort_hand(unsorted);
+}
 
-    count_cards(player) {
-        let p = parseInt(player.slice(1));
-        let count = this.players[p].cards.length;
+function sort_hand(hand) {
+    return hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
+}
+
+function show_hand(player) {
+    for (let i = 0; i < player.cards.length; i++) {
+        let card = player.cards[i];
+        let img = document.createElement("img");
+        let address = "./cards/" + card.suit.toLowerCase().slice(0, 1) + "_" + card.face + ".png";
+        img.src = address;
+        img.width = 75;
+        img.height = 120;
+        document.querySelector("#player-cards").appendChild(img);
     }
 }
 
+function create() {
+    create = no;
+    console.log("new board made");
+    var deck = new Deck();
+    deck.create();
+    deck.shuffle();
+}
+// Player joined
+let socket = io.connect("http://localhost:4000");
+let alias = prompt("Enter your name");
 
-let board = new Board();
-board.start('A', 'B', 'C', 'D');
-board.show_cards("p0");
-board.count_cards("p0");
-//console.log(board.players);
+if (alias === null || alias === "") {
+    alias = "Default";
+}
+let you = new Player(alias);
+
+socket.emit("player", you);
+socket.on("id", (arg) => {
+    you.id = arg;
+});
+
+//Create deck only when there is one player
+let deck = new Deck();
+deck.create();
+deck.shuffle();
+
+give_hand(you);
+show_hand(you);
