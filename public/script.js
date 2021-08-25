@@ -71,13 +71,13 @@ class Board {
         this.players[2].cards = deck.Deck.slice(26, 40);
         this.players[3].cards = deck.Deck.slice(40, 54);
 
-        this.sort(this.players[0].cards);
-        this.sort(this.players[1].cards);
-        this.sort(this.players[2].cards);
-        this.sort(this.players[3].cards);
+        this.sort_hand(this.players[0].cards);
+        this.sort_hand(this.players[1].cards);
+        this.sort_hand(this.players[2].cards);
+        this.sort_hand(this.players[3].cards);
     }
 
-    sort(hand) {
+    sort_hand(hand) {
         hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
 
         /* Sorts suits and values (not needed)
@@ -115,4 +115,5 @@ class Board {
 let board = new Board();
 board.start('A', 'B', 'C', 'D');
 board.show_cards("p0");
+board.count_cards("p0");
 //console.log(board.players);
