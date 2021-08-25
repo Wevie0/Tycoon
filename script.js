@@ -1,3 +1,5 @@
+"use strict"
+
 class Card {
     constructor(suit, value, face) {
         this.suit = suit;
@@ -15,7 +17,7 @@ class Deck {
 
         const suits = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
         const values = [12, 13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        const faces = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        const faces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
 
         for (let suit of suits) {
             for (let v = 0; v < values.length; v++) {
@@ -54,11 +56,11 @@ class Board {
         this.players = [];
     }
 
-    start(p1, p2, p3, p4) {
+    start(p0, p1, p2, p3) {
+        this.players.push(new Player(p0));
         this.players.push(new Player(p1));
         this.players.push(new Player(p2));
         this.players.push(new Player(p3));
-        this.players.push(new Player(p4));
 
         let deck = new Deck();
         deck.create();
@@ -73,25 +75,44 @@ class Board {
         this.sort(this.players[1].cards);
         this.sort(this.players[2].cards);
         this.sort(this.players[3].cards);
-
-
     }
 
     sort(hand) {
         hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
-        // hand.sort((a, b) => {
-        //     if (a.suit === b.suit) {
-        //         return a.value > b.value ? 1 : -1;
-        //     }
-        //     else {
-        //         return a.suit < b.suit ? 1 : -1;
-        //     }
-        // })
+
+        /* Sorts suits and values (not needed)
+        hand.sort((a, b) => {
+            if (a.suit === b.suit) {
+                return a.value > b.value ? 1 : -1;
+            }
+            else {
+                return a.suit < b.suit ? 1 : -1;
+            }
+        })
+        */
+    }
+
+    show_cards(player) {
+        let p = parseInt(player.slice(1));
+        for (let i = 0; i < this.players[p].cards.length; i++) {
+            let card = this.players[p].cards[i];
+            let img = document.createElement("img");
+            let address = "./cards/" + card.suit.toLowerCase().slice(0, 1) + "_" + card.value + ".png";
+            img.src = address;
+            img.width = 75;
+            img.height = 120;
+            document.querySelector("#player-cards").appendChild(img);
+        }
+    }
+
+    count_cards(player) {
+        let p = parseInt(player.slice(1));
+        let count = this.players[p].cards.length;
     }
 }
 
 
-
 let board = new Board();
 board.start('A', 'B', 'C', 'D');
-console.log(board.players);
+board.show_cards("p0");
+//console.log(board.players);
