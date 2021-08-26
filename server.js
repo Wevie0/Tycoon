@@ -48,7 +48,6 @@ class Player {
         this.cards = [];
         this.role = "Poor";
         this.score = 0;
-
     }
 }
 

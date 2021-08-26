@@ -87,14 +87,16 @@ function show_hand(player) {
 
 // Player joined
 let socket = io.connect("http://localhost:4000");
-
 let deck;
 let you;
+let card_count = [];
 
+// Receive deck from server (redundant)
 socket.on("deck", (arg) => {
     deck = arg;
 })
 
+// Receive player information from server
 socket.on("you", (arg) => {
     you = arg;
     show_hand(you);
