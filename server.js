@@ -42,6 +42,37 @@ class Deck {
     }
 }
 
+class Player {
+    constructor(id) {
+        this.id = id;
+        this.cards = [];
+        this.role = "Poor";
+        this.score = 0;
+
+    }
+}
+
+function give_hand(player) {
+    let unsorted = [];
+    if (player.id === 0) {
+        unsorted = deck.Deck.slice(0, 13);
+    }
+    else if (player.id === 1) {
+        unsorted = deck.Deck.slice(13, 26);
+    }
+    else if (player.id === 2) {
+        unsorted = deck.Deck.slice(26, 40);
+    }
+    else if (player.id === 3) {
+        unsorted = deck.Deck.slice(40, 54);
+    }
+    player.cards = sort_hand(unsorted);
+}
+
+function sort_hand(hand) {
+    return hand.sort((a, b) => (a.value > b.value) ? 1 : -1);
+}
+
 let express = require('express');
 let socket = require("socket.io");
 let app = express();
@@ -50,36 +81,27 @@ let server = app.listen(4000, function () {
 });
 
 let players = [];
+
 let deck = new Deck();
 deck.create();
 // deck.shuffle();
-let id = 0;
 
 app.use(express.static('public'));
 
 let io = socket(server);
 
-io.on("connection", function (socket) {
-    console.log("made socket connection", socket.id);
-});
-
 io.on("connection", (socket) => {
-    socket.on("player", (arg, callback) => {
-        socket.emit("id", id);
-        id++;
-        arg.id = id - 1;
-        players.push(arg);
-        console.log(players);
-        callback('ok');
-    });
-    // socket.on("deck", (arg) => {
-    //     deck = arg;
-    //     socket.emit("deck", arg);
-    // });
+    console.log("made socket connection", socket.id);
     socket.emit("deck", deck);
 
+    players.push(new Player(players.length));
+    give_hand(players[players.length - 1]);
+
+    console.log(players[players.length - 1]);
+
+    socket.emit("you", players);
+
+
 });
 
-if (players.length === 4) {
-    console.log("Begin!");
-}
+

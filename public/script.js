@@ -43,9 +43,8 @@ class Deck {
 }
 
 class Player {
-    constructor(name) {
-        this.name = name;
-        this.id = -1;
+    constructor(id) {
+        this.id = id;
         this.cards = [];
         this.role = "Poor";
         this.score = 0;
@@ -88,42 +87,20 @@ function show_hand(player) {
 
 // Player joined
 let socket = io.connect("http://localhost:4000");
-let alias = prompt("Enter your name");
 
-if (alias === null || alias === "") {
-    alias = "Default";
-}
-let you = new Player(alias);
 let deck;
-
-socket.on("id", (arg) => {
-    you.id = arg;
-});
+let you;
 
 socket.on("deck", (arg) => {
-    console.log(arg);
     deck = arg;
 })
 
-console.log(deck)
-socket.emit("player", you, (response) => {
-    console.log(response);
-    console.log(you.id);
-    if (response) {
-        if (you.id === 0) {
-            deck = new Deck();
-            deck.create();
-            deck.shuffle();
-            socket.emit("deck", deck);
-        }
-        socket.on("deck", (arg) => {
-            deck = arg;
-            console.log("yolo");
-        });
-        give_hand(you);
-        show_hand(you);
-    }
-});
+socket.on("you", (arg) => {
+    you = arg;
+    console.log(arg);
+})
 
-//Create deck only at the beginning
+
+
+
 
