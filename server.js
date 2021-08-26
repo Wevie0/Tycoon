@@ -8,6 +8,7 @@ let server = app.listen(4000, function () {
 });
 
 let players = [];
+let deck = [];
 let id = 0;
 
 app.use(express.static('public'));
@@ -19,11 +20,17 @@ io.on("connection", function (socket) {
 });
 
 io.on("connection", (socket) => {
-    socket.on("player", (arg) => {
-        io.emit("id", id);
+    socket.on("player", (arg, callback) => {
+        socket.emit("id", id);
         id++;
+        arg.id = id - 1;
         players.push(arg);
         console.log(players);
+        callback('ok');
+    });
+    socket.on("deck", (arg) => {
+        deck = arg;
+        socket.emit("deck", arg);
     });
 
 });

@@ -24,8 +24,8 @@ class Deck {
                 this.Deck.push(new Card(suit, values[v], faces[v]));
             }
         }
-        this.Deck.push(new Card('_Joker', 14, 'Joker'))
-        this.Deck.push(new Card('_Joker', 14, 'Joker'))
+        this.Deck.push(new Card('_Joker', 14, 'Joker'));
+        this.Deck.push(new Card('_Joker', 14, 'Joker'));
     }
 
     shuffle() {
@@ -86,13 +86,6 @@ function show_hand(player) {
     }
 }
 
-function create() {
-    create = no;
-    console.log("new board made");
-    var deck = new Deck();
-    deck.create();
-    deck.shuffle();
-}
 // Player joined
 let socket = io.connect("http://localhost:4000");
 let alias = prompt("Enter your name");
@@ -102,15 +95,29 @@ if (alias === null || alias === "") {
 }
 let you = new Player(alias);
 
-socket.emit("player", you);
 socket.on("id", (arg) => {
     you.id = arg;
 });
 
-//Create deck only when there is one player
-let deck = new Deck();
-deck.create();
-deck.shuffle();
+let deck;
+socket.emit("player", you, (response) => {
+    console.log(response);
+    console.log(you.id);
+    if (response) {
+        if (you.id === 0) {
+            deck = new Deck();
+            deck.create();
+            deck.shuffle();
+            socket.emit("deck", deck);
+        }
+        socket.on("deck", (arg) => {
+            deck = arg;
+            console.log("yolo");
+        });
+        give_hand(you);
+        show_hand(you);
+    }
+});
 
-give_hand(you);
-show_hand(you);
+//Create deck only at the beginning
+
