@@ -84,7 +84,7 @@ let players = [];
 
 let deck = new Deck();
 deck.create();
-// deck.shuffle();
+deck.shuffle();
 
 app.use(express.static('public'));
 
@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
 
     console.log(players[players.length - 1]);
 
-    socket.emit("you", players);
+    socket.emit("you", players[players.length - 1]);
 
 
 });
