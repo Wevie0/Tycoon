@@ -94,12 +94,18 @@ if (alias === null || alias === "") {
     alias = "Default";
 }
 let you = new Player(alias);
+let deck;
 
 socket.on("id", (arg) => {
     you.id = arg;
 });
 
-let deck;
+socket.on("deck", (arg) => {
+    console.log(arg);
+    deck = arg;
+})
+
+console.log(deck)
 socket.emit("player", you, (response) => {
     console.log(response);
     console.log(you.id);
