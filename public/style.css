@@ -1,3 +1,20 @@
+html {
+    background-image: url(bg.png);
+}
+
+.count {
+    position: absolute;
+    display: flex;
+    width: 250px;
+    height: 125px;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arsenal', sans-serif;
+    border: 5px solid slategrey;
+    background-color: black;
+    font-size: 24px;
+}
+
 #player-cards {
     position: fixed;
     bottom: 0;
@@ -5,3 +22,31 @@
     width: 100%;
     text-align: center;
 }
+
+#you-count {
+    color: white;
+    bottom: 10px;
+    left: 10px;
+}
+
+#left-count {
+    color: white;
+    top: 10px;
+    left: 10px;
+}
+
+#middle-count {
+    color: white;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+#right-count {
+    color: white;
+    top: 10px;
+    right: 10px;
+}
+
+

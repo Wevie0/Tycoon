@@ -85,6 +85,10 @@ function show_hand(player) {
     }
 }
 
+function count_player_cards(player) {
+    return player.cards.length;
+}
+
 // Player joined
 let socket = io.connect("http://localhost:4000");
 let deck;
@@ -101,6 +105,8 @@ socket.on("you", (arg) => {
     you = arg;
     show_hand(you);
 })
+
+
 
 
 
