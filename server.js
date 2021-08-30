@@ -96,9 +96,22 @@ io.on("connection", (socket) => {
     players.push(new Player(players.length));
     give_hand(players[players.length - 1]);
 
-    console.log(players[players.length - 1]);
+    // console.log(players[players.length - 1]);
 
     socket.emit("you", players[players.length - 1]);
+    if (players.length === 4) {
+        io.emit("ready");
+    }
+
+    socket.on("left", (arg) => {
+        socket.emit("left", players[arg])
+    });
+    socket.on("middle", (arg) => {
+        socket.emit("middle", players[arg])
+    });
+    socket.on("right", (arg) => {
+        socket.emit("right", players[arg])
+    });
 
 
 });
