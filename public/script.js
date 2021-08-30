@@ -85,20 +85,67 @@ function show_hand(player) {
     }
 }
 
+function count_cards() {
+    const your_hand = document.querySelector("#you-count");
+    const left = document.querySelector("#left-count");
+    const middle = document.querySelector("#middle-count");
+    const right = document.querySelector("#right-count");
+
+    socket.emit("left", order[0]);
+    socket.emit("middle", order[1]);
+    socket.emit("right", order[2]);
+
+    your_hand.innerHTML = "ID: " + you.id + "<br>" + "Role: " + you.role + "<br>" + "You have " + you.cards.length + " cards";
+    socket.on("left", (arg) => {
+        left.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+    });
+    socket.on("middle", (arg) => {
+        middle.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+    });
+    socket.on("right", (arg) => {
+        right.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+    });
+}
+
+function player_order(id) { // Left, Opposite, Right
+    if (id === 0) {
+        return [3, 1, 2];
+    }
+    else if (id === 1) {
+        return [0, 2, 3];
+    }
+    else if (id === 2) {
+        return [1, 0, 3];
+    }
+    else {
+        return [2, 1, 0];
+    }
+}
+
 // Player joined
 let socket = io.connect("http://localhost:4000");
-
 let deck;
 let you;
+let order = [];
 
+// Receive deck from server (redundant)
 socket.on("deck", (arg) => {
     deck = arg;
-})
+});
 
+// Receive player information from server
 socket.on("you", (arg) => {
     you = arg;
     show_hand(you);
+    order = player_order(you.id);
+
+});
+
+socket.on("ready", () => {
+    count_cards();
 })
+
+
 
 
 
