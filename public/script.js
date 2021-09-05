@@ -109,17 +109,29 @@ function count_cards() {
 
 function player_order(id) { // Left, Opposite, Right
     if (id === 0) {
-        return [3, 1, 2];
+        return [1, 2, 3];
     }
     else if (id === 1) {
-        return [0, 2, 3];
+        return [2, 3, 0];
     }
     else if (id === 2) {
-        return [1, 0, 3];
+        return [3, 0, 1];
     }
     else {
-        return [2, 1, 0];
+        return [0, 1, 2];
     }
+}
+
+function your_turn() {
+    select_cards();
+}
+
+function update() {
+
+}
+
+function select_cards() {
+    let num_selected = 0;
 }
 
 // Player joined
@@ -127,6 +139,7 @@ let socket = io.connect("http://localhost:4000");
 let deck;
 let you;
 let order = [];
+
 
 // Receive deck from server (redundant)
 socket.on("deck", (arg) => {
@@ -143,7 +156,16 @@ socket.on("you", (arg) => {
 
 socket.on("ready", () => {
     count_cards();
-})
+});
+
+socket.on("turn", (arg) => {
+    if (arg === you.id) {
+        your_turn();
+    }
+    else {
+        update();
+    }
+});
 
 
 
