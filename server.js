@@ -88,6 +88,7 @@ deck.shuffle();
 app.use(express.static('public'));
 
 let io = socket(server);
+let turn = 0;
 
 io.on("connection", (socket) => {
     console.log("made socket connection", socket.id);
@@ -95,8 +96,6 @@ io.on("connection", (socket) => {
 
     players.push(new Player(players.length));
     give_hand(players[players.length - 1]);
-
-    // console.log(players[players.length - 1]);
 
     socket.emit("you", players[players.length - 1]);
     if (players.length === 4) {
@@ -112,6 +111,8 @@ io.on("connection", (socket) => {
     socket.on("right", (arg) => {
         socket.emit("right", players[arg])
     });
+
+    io.emit("turn", turn);
 
 
 });
