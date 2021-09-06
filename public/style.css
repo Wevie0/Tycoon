@@ -2,7 +2,7 @@ html {
     background-image: url(bg.png);
 }
 
-.count {
+.info {
     position: absolute;
     display: flex;
     width: 250px;
@@ -15,6 +15,10 @@ html {
     font-size: 24px;
 }
 
+.selected {
+    border: 5px solid blue;
+}
+
 #player-cards {
     position: fixed;
     bottom: 0;
@@ -23,19 +27,19 @@ html {
     text-align: center;
 }
 
-#you-count {
+#your-info {
     color: white;
     bottom: 10px;
     left: 10px;
 }
 
-#left-count {
+#left-info {
     color: white;
     top: 10px;
     left: 10px;
 }
 
-#middle-count {
+#middle-info {
     color: white;
     left: 0; 
     right: 0; 
@@ -43,10 +47,12 @@ html {
     margin-right: auto; 
 }
 
-#right-count {
+#right-info {
     color: white;
     top: 10px;
     right: 10px;
 }
+
+
 
 

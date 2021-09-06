@@ -81,29 +81,30 @@ function show_hand(player) {
         img.src = address;
         img.width = 75;
         img.height = 120;
+        img.classList.add("card", card.suit, card.face);
         document.querySelector("#player-cards").appendChild(img);
     }
 }
 
 function count_cards() {
-    const your_hand = document.querySelector("#you-count");
-    const left = document.querySelector("#left-count");
-    const middle = document.querySelector("#middle-count");
-    const right = document.querySelector("#right-count");
+    const your_hand = document.querySelector("#your-info");
+    const left = document.querySelector("#left-info");
+    const middle = document.querySelector("#middle-info");
+    const right = document.querySelector("#right-info");
 
     socket.emit("left", order[0]);
     socket.emit("middle", order[1]);
     socket.emit("right", order[2]);
 
-    your_hand.innerHTML = "ID: " + you.id + "<br>" + "Role: " + you.role + "<br>" + "You have " + you.cards.length + " cards";
+    your_hand.innerHTML = "ID: " + you.id + "<br>" + "Role: " + you.role + "<br>" + "You have " + you.cards.length + " card(s)";
     socket.on("left", (arg) => {
-        left.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+        left.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " card(s)";
     });
     socket.on("middle", (arg) => {
-        middle.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+        middle.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " card(s)";
     });
     socket.on("right", (arg) => {
-        right.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " cards";
+        right.innerHTML = "ID: " + arg.id + "<br>" + "Role: " + arg.role + "<br>" + "They have " + arg.cards.length + " card(s)";
     });
 }
 
@@ -123,22 +124,56 @@ function player_order(id) { // Left, Opposite, Right
 }
 
 function your_turn() {
-    select_cards();
+    document.querySelector("#your-info").style.border = "5px solid gold";
+    document.addEventListener("click", (event) => {
+        let x = event.clientX;
+        let y = event.clientY;
+        let get = document.elementFromPoint(x, y);
+        if (get.classList.contains("card")) {
+            currently_selected.verify(get);
+            // console.log("yo");
+            // selected.classList.add("selected");
+            // TODO: add remove select
+            // TODO: add submit and reset
+        }
+
+    });
+
 }
 
+// Update Screen after turns
 function update() {
 
 }
+function getMousePos(event) {
 
-function select_cards() {
-    let num_selected = 0;
+
 }
+
+class Selected {
+    static num_selected = 0;
+    static selected = [];
+
+    verify(card_html) {
+        let suit = card_html.classList[1];
+        let face = card_html.classList[2];
+        console.log(suit, face);
+        // console.log(Selected.num_selected);
+        // TODO: add verify
+    }
+
+    add() {
+
+    }
+}
+
 
 // Player joined
 let socket = io.connect("http://localhost:4000");
 let deck;
 let you;
 let order = [];
+let currently_selected = new Selected();
 
 
 // Receive deck from server (redundant)
